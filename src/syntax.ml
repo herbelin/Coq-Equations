@@ -380,6 +380,7 @@ let interp_pat env notations ?(avoid = ref Id.Set.empty) p pat =
   let ienv = try compute_internalization_env env sigma Variable vars tys impls with Not_found ->
     anomaly (str"Building internalization environment")
   in
+  let notations = List.map Metasyntax.prepare_where_notation notations in
   let vars, tys, impls, ienv =
     match p with
     | Some (p, _) ->
@@ -462,7 +463,7 @@ let interp_eqn env notations p eqn =
       p.program_implicits
   in
   let interp_pat notations = interp_pat env notations ~avoid in
-  let rec aux notations curpats (pat, rhs) =
+  let rec aux (notations:Vernacexpr.decl_notation list) curpats (pat, rhs) =
     let loc, pats =
       match pat with
       | SignPats pat ->
