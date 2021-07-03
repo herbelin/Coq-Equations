@@ -508,7 +508,7 @@ let interp_eqn env notations p ~avoid eqn =
   in
   let impls =
     List.map (fun a ->
-        if Impargs.is_status_implicit a then Some (Impargs.name_of_implicit a) else None)
+        if Impargs.is_status_implicit a then Some (match Impargs.explicitation a with ExplByName id -> id | ExplByPos n -> Id.of_string ("arg_" ^ string_of_int n)) else None)
       p.program_implicits
   in
   let interp_pat notations avoid = interp_pat env notations ~avoid in
