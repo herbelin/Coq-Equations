@@ -57,9 +57,10 @@ let cache_instance (derive, gr) =
 let subst_instance (subst, (derive, gr)) =
   (derive, fst (Globnames.subst_global subst gr))
 
-let discharge_instance (derive, gr as o) =
-  if Globnames.isVarRef gr then None
-  else Some o
+let discharge_instance (derive, gr) =
+  match Lib.discharge_global_reference gr with
+  | None -> None
+  | Some gr -> Some (derive, gr)
 
 let derive_instance_input : derive_instance -> Libobject.obj =
   let decl = 

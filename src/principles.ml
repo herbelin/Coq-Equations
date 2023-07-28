@@ -56,13 +56,18 @@ let cache_rew_rule (base, gr, l2r) =
     base
     [CAst.make (UnivGen.fresh_global_instance (Global.env()) gr, true, None)]
 
+let discharge_rew_rule (base, gr, l2r) =
+  match Lib.discharge_global_reference gr with
+  | None -> None
+  | Some gr -> Some (base, gr, l2r)
+
 let inRewRule =
   let open Libobject in
   (* Object just to provide discharge *)
   declare_object
     { (default_object "EQUATIONS_REWRITE_RULE") with
       cache_function = (fun obj -> cache_rew_rule obj);
-      discharge_function = (fun x -> Some x);
+      discharge_function = discharge_rew_rule;
       classify_function = (fun _ -> Dispose)
     }
 
