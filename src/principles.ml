@@ -69,7 +69,7 @@ let inRewRule =
 let add_rew_rule ~l2r ~base ref = Lib.add_leaf (inRewRule (base,ref,l2r))
 
 let cache_opacity cst =
-  Global.set_strategy (ConstKey cst) Conv_oracle.Opaque
+  Redexpr.set_strategy false [Conv_oracle.Opaque,[EvalConstRef cst]]
 
 let subst_opacity (subst, cst) =
   let gr' = Mod_subst.subst_constant subst cst in
