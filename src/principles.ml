@@ -1371,10 +1371,10 @@ let declare_funind ~pm info alias env evd is_rec protos progs
     (* If desired the definitions should be made transparent again. *)
     begin
     if !Equations_common.equations_transparent then
-      (Global.set_strategy (ConstKey (fst (destConst evd f))) Conv_oracle.transparent;
+      (Redexpr.set_strategy false [Conv_oracle.transparent,[EvalConstRef (fst (destConst evd f))]];
        match alias with
        | None -> ()
-       | Some ((f, _), _, _) -> Global.set_strategy (ConstKey (fst (destConst evd f))) Conv_oracle.transparent)
+       | Some ((f, _), _, _) -> Redexpr.set_strategy false [Conv_oracle.transparent,[EvalConstRef (fst (destConst evd f))]])
     else
       ((* Otherwise we turn them opaque and let that information be discharged as well *)
         Lib.add_leaf (inOpacity (fst (destConst evd f)));
@@ -1771,9 +1771,9 @@ let build_equations ~pm with_ind env evd ?(alias:alias option) rec_info progs =
               let cst' = fst (destConst !evd f) in
               Hints.(add_hints ~locality [info.base_id]
                 (HintsTransparencyEntry (HintsReferences [Tacred.EvalConstRef cst'], false)));
-              Global.set_strategy (ConstKey cst') Conv_oracle.Opaque
+              Redexpr.set_strategy false [Conv_oracle.Opaque,[EvalConstRef cst']];
            | None -> ());
-          Global.set_strategy (ConstKey cst) Conv_oracle.Opaque;
+          Redexpr.set_strategy false [Conv_oracle.Opaque,[EvalConstRef cst]];
           if with_ind then (declare_ind (); pm) else pm)
         else pm
       in
