@@ -625,7 +625,7 @@ let interp_eqn env sigma notations p ~avoid eqn =
     | Empty i -> Empty i
   and interp_wheres avoid w notations =
     let interp_where (((loc,id),decl,nested,b,t,reca) as p,eqns) =
-      Dumpglob.dump_reference ?loc "<>" (Id.to_string id) "def";
+      Dumpglob.dump_reference ?loc (Id.to_string id) Dumpglob.Recursive;
       p, map (aux2 notations avoid) eqns
     in List.map interp_where w
   and interp_constr_expr notations (avoid : Id.Set.t) ?loc c =
